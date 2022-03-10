@@ -455,7 +455,7 @@ write.csv(all_SoCal_res,"/Users/xinyu/Rob\ lab/neighborhood/census_data/data/all
 
 
 ```{r get_tracts_geom}
-census_api_key("47ba78f3e9d1f255fc8b04c854f382a95bf0a851")
+census_api_key("xxxxx")
 geo<-get_acs(state = "CA", geography = "tract",variables = "DP05_0001",survey="acs5",year=2009, geometry = T)
 ```
 
