@@ -1,0 +1,71 @@
+﻿variable,description,note,dataset
+P005001,Total,Sampson_ sf1 (potential),sf1
+P005004,Total!!Not Hispanic or Latino!!Black or African American alone,Sampson_ sf1 (potential),sf1
+P004002,Total!!Hispanic or Latino,Sampson_ sf1 (potential),sf1
+P019002,Total!!Households with one or more people under 18 years,ADI_ sf1,sf1
+P019003,Total!!Households with one or more people under 18 years!!Family households,ADI_ sf1,sf1
+P019005,Total!!Households with one or more people under 18 years!!Family households!!Other family,ADI_ sf1; single parent,sf1
+P064001,Total households,Sampson_  sf3 (potential),sf3
+P064002,Total!!With public assistance income,Sampson_  sf3 (potential),sf3
+P064003,Total!!No public assistance income,Sampson_ sf3 (potential),sf3
+P077001,Median family income in 1999,ADI_ sf3,sf3
+H085001,Median value,ADI_ sf3,sf3
+H063001,Median gross rent,ADI_ sf3,sf3
+H091001,Median selected monthly owner costs for!!Housing units with a mortgage,ADI_ sf3,sf3
+P088001,Total,ADI_ sf3,sf3
+P088002,Total!!Under .50,ADI_ sf3,sf3
+P088003,Total!!.50 to .74,ADI_ sf3,sf3
+P088004,Total!!.75 to .99,ADI_ sf3,sf3
+P088005,Total!!1.00 to 1.24,ADI_ sf3,sf3
+P088006,Total!!1.25 to 1.49,ADI_ sf3,sf3
+DP3_C155,Percent!!POVERTY STATUS IN 1999 (below poverty level)!!Families!!Percent below poverty level,Sampson_ ADI_ sf3profile,sf3profile
+DP3_C123,Percent!!INCOME IN 1999!!Households!!With public assistance income,Sampson_ ADI_ sf3profile (potential),sf3profile
+DP3_C4,Number!!EMPLOYMENT STATUS!!Population 16 years and over!!In labor force!!Civilian labor force,Sampson_ ADI_ sf3profile,sf3profile
+DP3_C8,Number!!EMPLOYMENT STATUS!!Population 16 years and over!!In labor force!!Civilian labor force!!Unemployed,Sampson_ ADI_ sf3profile,sf3profile
+DP3_C93,Percent!!INCOME IN 1999!!Households!!Less than $10;000,Sampson_ ADI_ sf3profile,sf3profile
+DP3_C95,Percent!!INCOME IN 1999!!Households!!$10;000 to $14;999,potential,sf3profile
+DP3_C97,Percent!!INCOME IN 1999!!Households!!$15;000 to $24;999,potential,sf3profile
+DP3_C99,Percent!!INCOME IN 1999!!Households!!$25;000 to $34;999,potential,sf3profile
+DP3_C101,Percent!!INCOME IN 1999!!Households!!$35;000 to $49;999,potential,sf3profile
+DP3_C103,Percent!!INCOME IN 1999!!Households!!$50;000 to $74;999,Sampson_ ADI_ sf3profile,sf3profile
+DP3_C105,Percent!!INCOME IN 1999!!Households!!$75;000 to $99;999,Sampson_ ADI_ sf3profile,sf3profile
+DP3_C107,Percent!!INCOME IN 1999!!Households!!$100;000 to $149;999,Sampson_ ADI_ sf3profile,sf3profile
+DP3_C109,Percent!!INCOME IN 1999!!Households!!$150;000 to $199;999,Sampson_ ADI_ sf3profile,sf3profile
+DP3_C111,Percent!!INCOME IN 1999!!Households!!$200;000 or more,Sampson_ ADI_ sf3profile,sf3profile
+DP3_C131,Percent!!INCOME IN 1999!!Families!!Less than $10;000,Sampson_ ADI_ sf3profile,sf3profile
+DP3_C133,Percent!!INCOME IN 1999!!Families!!$10;000 to $14;999,potential,sf3profile
+DP3_C135,Percent!!INCOME IN 1999!!Families!!$15;000 to $24;999,potential,sf3profile
+DP3_C137,Percent!!INCOME IN 1999!!Families!!$25;000 to $34;999,potential,sf3profile
+DP3_C139,Percent!!INCOME IN 1999!!Families!!$35;000 to $49;999,potential,sf3profile
+DP3_C141,Percent!!INCOME IN 1999!!Families!!$50;000 to $74;999,Sampson_ ADI_ sf3profile,sf3profile
+DP3_C143,Percent!!INCOME IN 1999!!Families!!$75;000 to $99;999,Sampson_ ADI_ sf3profile,sf3profile
+DP3_C145,Percent!!INCOME IN 1999!!Families!!$100;000 to $149;999,Sampson_ ADI_ sf3profile,sf3profile
+DP3_C147,Percent!!INCOME IN 1999!!Families!!$150;000 to $199;999,Sampson_ ADI_ sf3profile,sf3profile
+DP3_C149,Percent!!INCOME IN 1999!!Families!!$200;000 or more,Sampson_ ADI_ sf3profile,sf3profile
+DP3_C45,Percent!!Employed civilian population 16 years and over!!OCCUPATION!!Management; professional; and related occupations,Sampson_ ADI_ sf3profile,sf3profile
+DP1_C88,Percent!!HOUSEHOLDS BY TYPE!!Households!!Family households (families)!!Female householder; no husband present!!With own children under 18 years,Sampson_ ADI_ sf4profile,sf4profile
+DP1_C87,Number!!HOUSEHOLDS BY TYPE!!Households!!Family households (families)!!Female householder; no husband present!!With own children under 18 years,Sampson_ ADI_ sf4profile,sf4profile
+DP1_C95,Number!!HOUSEHOLDS BY TYPE!!Households!!Households with individuals under 18 years,Sampson_ ADI_ sf4profile,sf4profile
+DP1_C79,Number!!HOUSEHOLDS BY TYPE!!Households!!Family households (families)!!With own children under 18 years,Sampson_ ADI_ sf4profile,sf4profile
+DP2_C99,Percent!!NATIVITY AND PLACE OF BIRTH!!Total population!!Foreign born,Sampson_ sf4profile (potential),sf4profile
+DP1_C7,Percent!!Total population!!SEX AND AGE!!Under 5 years,Sampson_ sf4profile (potential),sf4profile
+DP4_C58,Percent!!Occupied Housing Units!!YEAR HOUSEHOLDER MOVED INTO UNIT!!1995 to 1998,Sampson_ sf4profile (potential),sf4profile
+DP4_C56,Percent!!Occupied Housing Units!!YEAR HOUSEHOLDER MOVED INTO UNIT!!1999 to March 2000,Sampson_ sf4profile (potential),sf4profile
+DP1_C104,Percent!!HOUSING TENURE!!Occupied housing units!!Owner-occupied housing units,Sampson_ ADI_ sf4profile ,sf4profile
+DP2_C28,Number!!EDUCATIONAL ATTAINMENT!!Population 25 years and over!!Percent high school graduate or higher,Sampson_ ADI_ sf4profile,sf4profile
+DP2_C29,Number!!EDUCATIONAL ATTAINMENT!!Population 25 years and over!!Percent bachelor's degree or higher,Sampson_ ADI_ sf4profile,sf4profile
+DP2_C15,Percent!!EDUCATIONAL ATTAINMENT!!Population 25 years and over!!Less than 9th grade,Sampson_ ADI_ sf4profile,sf4profile
+DP2_C17,Percent!!EDUCATIONAL ATTAINMENT!!Population 25 years and over!!9th to 12th grade; no diploma,Sampson_ ADI_ sf4profile,sf4profile
+DP2_C19,Percent!!EDUCATIONAL ATTAINMENT!!Population 25 years and over!!High school graduate (includes equivalency),Sampson_ ADI_ sf4profile,sf4profile
+DP2_C21,Percent!!EDUCATIONAL ATTAINMENT!!Population 25 years and over!!Some college; no degree,Sampson_ ADI_ sf4profile,sf4profile
+DP2_C23,Percent!!EDUCATIONAL ATTAINMENT!!Population 25 years and over!!Associate degree,Sampson_ ADI_ sf4profile,sf4profile
+DP2_C25,Percent!!EDUCATIONAL ATTAINMENT!!Population 25 years and over!!Bachelor's degree,Sampson_ ADI_ sf4profile,sf4profile
+DP2_C27,Percent!!EDUCATIONAL ATTAINMENT!!Population 25 years and over!!Graduate or professional degree,Sampson_ ADI_ sf4profile,sf4profile
+DP1_C34,Percent!!Total population!!SEX AND AGE!!18 years and over,Sampson_ ADI_ sf4profile,sf4profile
+DP1_C0,Number!!Total population,Sampson_ sf4profile (potential),sf4profile
+DP4_C68,Percent!!Occupied Housing Units!!VEHICLES AVAILABLE!!None,ADI_ sf4profile,sf4profile
+DP4_C98,Percent!!Occupied Housing Units!!SELECTED CHARACTERISTICS!!No telephone service,ADI_ sf4profile,sf4profile
+DP4_C94,Percent!!Occupied Housing Units!!SELECTED CHARACTERISTICS!!Lacking complete plumbing facilities,ADI_ sf4profile,sf4profile
+DP4_C104,Percent!!OCCUPANTS PER ROOM!!Occupied housing units!!1.01 to 1.50,ADI_ sf4profile,sf4profile
+DP4_C106,Percent!!OCCUPANTS PER ROOM!!Occupied housing units!!1.51 or more,ADI_ sf4profile,sf4profile
+DP1_C106,Percent!!HOUSING TENURE!!Occupied housing units!!Renter-occupied housing units,potential,sf4profile

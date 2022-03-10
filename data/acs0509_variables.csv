@@ -1,0 +1,64 @@
+﻿variable,description,note
+C17002_001E,Total:,ADI (ACS detail table)
+C17002_002E,Under .50,ADI (ACS detail table)
+C17002_003E,.50 to .99,ADI (ACS detail table)
+C17002_004E,1.00 to 1.24,ADI (ACS detail table)
+C17002_005E,1.25 to 1.49,ADI (ACS detail table)
+DP02_0003E,Number!!Estimate!!HOUSEHOLDS BY TYPE!!Total households!!Family households (families)!!With own children under 18 years,Sampson_ ADI
+DP02_0007E,Number!!Estimate!!HOUSEHOLDS BY TYPE!!Total households!!Male householder; no wife present; family!!With own children under 18 years,
+DP02_0007PE,Percent!!Estimate!!HOUSEHOLDS BY TYPE!!Total households!!Male householder; no wife present; family!!With own children under 18 years,ADI
+DP02_0009E,Number!!Estimate!!HOUSEHOLDS BY TYPE!!Total households!!Female householder; no husband present; family!!With own children under 18 years,Sampson_ ADI
+DP02_0009PE,Percent!!Estimate!!HOUSEHOLDS BY TYPE!!Total households!!Female householder; no husband present; family!!With own children under 18 years,Sampson_ ADI
+DP02_0013E,Number!!Estimate!!HOUSEHOLDS BY TYPE!!Total households!!Households with one or more people under 18 years,Sampson_ ADI
+DP02_0059PE,Percent!!EDUCATIONAL ATTAINMENT!!Population 25 years and over!!Less than 9th grade,Sampson_ ADI
+DP02_0060PE,Percent!!EDUCATIONAL ATTAINMENT!!Population 25 years and over!!9th to 12th grade; no diploma,Sampson_ ADI
+DP02_0061PE,Percent!!EDUCATIONAL ATTAINMENT!!Population 25 years and over!!High school graduate (includes equivalency),Sampson_ ADI
+DP02_0062PE,Percent!!Estimate!!EDUCATIONAL ATTAINMENT!!Population 25 years and over!!Some college; no degree,Sampson_ ADI
+DP02_0063PE,Percent!!EDUCATIONAL ATTAINMENT!!Population 25 years and over!!Associate's degree,Sampson_ ADI
+DP02_0064PE,Percent!!EDUCATIONAL ATTAINMENT!!Population 25 years and over!!Bachelor's degree,Sampson_ ADI
+DP02_0065PE,Percent!!EDUCATIONAL ATTAINMENT!!Population 25 years and over!!Graduate or professional degree,Sampson_ ADI
+DP02_0066E,Number!!Estimate!!EDUCATIONAL ATTAINMENT!!Population 25 years and over!!Percent high school graduate or higher,Sampson_ ADI
+DP02_0067E,Number!!Estimate!!EDUCATIONAL ATTAINMENT!!Population 25 years and over!!Percent bachelor's degree or higher,Sampson_ ADI
+DP02_0092PE,Percent!!Estimate!!PLACE OF BIRTH!!Total population!!Foreign born,Sampson (potential)
+DP03_0009E,Number!!Estimate!!EMPLOYMENT STATUS!!Civilian labor force!!Percent Unemployed,Sampson_ ADI
+DP03_0027PE,Percent!!Estimate!!OCCUPATION!!Civilian employed population 16 years and over!!Management; professional; and related occupations,Sampson_ ADI
+DP03_0053PE,Percent!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Total households!!Less than $10;000,Sampson_ ADI
+DP03_0054PE,Percent!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Total households!!$10;000 to $14;999,potential
+DP03_0055PE,Percent!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Total households!!$15;000 to $24;999,potential
+DP03_0056PE,Percent!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Total households!!$25;000 to $34;999,potential
+DP03_0057PE,Percent!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Total households!!$35;000 to $49;999,potential
+DP03_0058PE,Percent!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Total households!!$50;000 to $74;999,ADI
+DP03_0059PE,Percent!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Total households!!$75;000 to $99;999,Sampson_ ADI
+DP03_0060PE,Percent!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Total households!!$100;000 to $149;999,Sampson_ ADI
+DP03_0061PE,Percent!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Total households!!$150;000 to $199;999,Sampson_ ADI
+DP03_0062PE,Percent!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Total households!!$200;000 or more,Sampson_ ADI
+DP03_0073PE,Percent!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Total households!!With cash public assistance income,Sampson
+DP03_0077PE,Percent!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Families!!Less than $10;000,Sampson_ ADI
+DP03_0078PE,Percent!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Families!!$10;000 to $14;999,potential
+DP03_0079PE,Percent!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Families!!$15;000 to $24;999,potential
+DP03_0080PE,Percent!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Families!!$25;000 to $34;999,potential
+DP03_0081PE,Percent!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Families!!$35;000 to $49;999,potential
+DP03_0082PE,Percent!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Families!!$50;000 to $74;999,ADI
+DP03_0083PE,Percent!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Families!!$75;000 to $99;999,Sampson_ ADI
+DP03_0084PE,Percent!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Families!!$100;000 to $149;999,Sampson_ ADI
+DP03_0085PE,Percent!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Families!!$150;000 to $199;999,Sampson_ ADI
+DP03_0086PE,Percent!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Families!!$200;000 or more,Sampson_ ADI
+DP03_0087E,Number!!Estimate!!INCOME AND BENEFITS (IN 2009 INFLATION-ADJUSTED DOLLARS)!!Families!!Median family income (dollars),ADI
+DP03_0103E,Number!!Estimate!!PERCENTAGE OF FAMILIES AND PEOPLE WHOSE INCOME IN THE PAST 12 MONTHS IS BELOW THE POVERTY LEVEL!!All families,Sampson_ ADI
+DP04_0045PE,Percent!!Estimate!!HOUSING TENURE!!Occupied housing units!!Owner-occupied,Sampson_ ADI
+DP04_0050PE,Percent!!Estimate!!YEAR HOUSEHOLDER MOVED INTO UNIT!!Occupied housing units!!Moved in 2005 or later,Sampson (potential)
+DP04_0051PE,Percent!!Estimate!!YEAR HOUSEHOLDER MOVED INTO UNIT!!Occupied housing units!!Moved in 2000 to 2004,Sampson (potential)
+DP04_0057PE,Percent!!Estimate!!VEHICLES AVAILABLE!!Occupied housing units!!No vehicles available,ADI
+DP04_0072PE,Percent!!Estimate!!SELECTED CHARACTERISTICS!!Occupied housing units!!Lacking complete plumbing facilities,ADI
+DP04_0074PE,Percent!!Estimate!!SELECTED CHARACTERISTICS!!Occupied housing units!!No telephone service available,ADI
+DP04_0077PE,Percent!!Estimate!!OCCUPANTS PER ROOM!!Occupied housing units!!1.01 to 1.50,ADI
+DP04_0078PE,Percent!!Estimate!!OCCUPANTS PER ROOM!!Occupied housing units!!1.51 or more,ADI
+DP04_0088E,Number!!Estimate!!VALUE!!Owner-occupied units!!Median (dollars),ADI
+DP04_0100E,Number!!Estimate!!SELECTED MONTHLY OWNER COSTS (SMOC)!!Housing units with a mortgage!!Median (dollars),ADI
+DP04_0132E,Number!!Estimate!!GROSS RENT!!Occupied units paying rent!!Median (dollars),ADI
+DP05_0001E,Number!!Estimate!!SEX AND AGE!!Total population,Sampson (potential)
+DP05_0004PE,Percent!!Estimate!!SEX AND AGE!!Total population!!Under 5 years,Sampson (potential)
+DP05_0018PE,Percent!!Estimate!!SEX AND AGE!!Total population!!18 years and over,Sampson_ ADI
+DP05_0066PE,Percent!!Estimate!!HISPANIC OR LATINO AND RACE!!Total population!!Hispanic or Latino (of any race),Sampson (potential)
+DP05_0073PE,Percent!!Estimate!!HISPANIC OR LATINO AND RACE!!Total population!!Not Hispanic or Latino!!Black or African American alone,Sampson (potential)
+DP04_0046PE,Percent!!Estimate!!HOUSING TENURE!!Occupied housing units!!Renter-occupied,potential
