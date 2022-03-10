@@ -4,7 +4,7 @@ library(dplyr)
 library(tidyr)
 library(sf)
 
-census_api_key("47ba78f3e9d1f255fc8b04c854f382a95bf0a851")
+census_api_key("xxxxx")
 acs0509_v<-read.csv("./data/acs0509_variables.csv") # a list of raw indicators from US Census ACS 2005-2009 5 year estimates
 acs1014_v<-read.csv("./data/acs1014_variables.csv") # a list of raw indicators from US Census ACS 2010-2014 5 year estimates
 census2000_v<-read.csv("./data/census2000_variables.csv") # a list of raw indicators from US Census 2000
