@@ -1,0 +1,470 @@
+---
+title: "SES dataset"
+output: html_notebook
+---
+
+```{r load_library}
+library(tidycensus) # US census API
+library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(sf)
+library(psych)
+library(gtools)
+library(stats)
+library(corrplot) #plotting correlation matrices
+library(lavaan)  #for fitting structural equation models
+library(semPlot)  #for automatically making diagrams 
+library(ggplot2)
+library(lavaanPlot)
+pca_importance <- function(x) {
+  vars <- x$sdev^2
+  vars <- vars/sum(vars)
+  rbind(`Standard deviation` = x$sdev, `Proportion of Variance` = vars, 
+        `Cumulative Proportion` = cumsum(vars))
+}
+```
+
+```{r load_datasets}
+# load census datasets
+acs0509_CA<-read.csv("./data/acs0509_CA_tract2.csv")
+acs1014_CA<-read.csv("./data/acs1014_CA_2000tract.csv")
+census2000_CA<-read.csv("./data/census2000_CA_tract2.csv")
+```
+
+```{r SoCal_tracts}
+# get tracts in Southern California county
+acs0509_CA<-within(acs0509_CA, county<-data.frame(do.call('rbind', strsplit(as.character(NAME), ',', fixed=TRUE))))
+acs0509_CA<-separate(data = acs0509_CA, col = NAME, into = c("tract", "county","state"), sep = ",")
+acs0509_CA<-subset(acs0509_CA,select=-c(state))
+acs0509_CA$county<-str_trim(acs0509_CA$county,side="both")
+SoCal_counties<-c("Imperial County","Kern County","Los Angeles County","Orange County","Riverside County","San Bernardino County","San Diego County","San Luis Obispo County","Santa Barbara County","Ventura County")
+acs0509_SoCal<-acs0509_CA%>%filter(county %in% SoCal_counties)
+acs1014_SoCal<-acs1014_CA%>%filter(GEOID %in% acs0509_SoCal$GEOID)
+census2000_SoCal<-census2000_CA%>%filter(GEOID %in% acs0509_SoCal$GEOID)
+```
+
+```{r leave_out_less_100_pop}
+# filter out tracts with population < 100
+acs0509_SoCal2<-acs0509_SoCal%>%filter(population>=100)
+acs1014_SoCal2<-acs1014_SoCal%>%filter(population>=100)
+census2000_SoCal2<-census2000_SoCal%>%filter(population>=100)
+```
+
+
+```{r key_indicators}
+# select key indicators
+acs0509_SoCal2<-acs0509_SoCal2%>%select(GEOID,population,p_poverty,p_unemployed,p_female_headed2,p_assistance,p_high_school_less,p_bachelor1,p_prof_occupation)%>%rename(pov=p_poverty,unem=p_unemployed,fh=p_female_headed2,ass=p_assistance,hsl=p_high_school_less,bach=p_bachelor1,prof=p_prof_occupation)
+acs1014_SoCal2<-acs1014_SoCal2%>%select(GEOID,population,p_poverty,p_unemployed,p_female_headed2,p_assistance,p_high_school_less,p_bachelor1,p_prof_occupation)%>%rename(pov=p_poverty,unem=p_unemployed,fh=p_female_headed2,ass=p_assistance,hsl=p_high_school_less,bach=p_bachelor1,prof=p_prof_occupation)
+census2000_SoCal2<-census2000_SoCal2%>%select(GEOID,population,p_poverty,p_unemployed,p_female_headed2,p_assistance,p_high_school_less,p_bachelor1,p_prof_occupation)%>%rename(pov=p_poverty,unem=p_unemployed,fh=p_female_headed2,ass=p_assistance,hsl=p_high_school_less,bach=p_bachelor1,prof=p_prof_occupation)
+```
+
+```{r remove_na}
+# remove tracts with na values
+acs0509_SoCal2<-na.omit(acs0509_SoCal2)
+acs1014_SoCal2<-na.omit(acs1014_SoCal2)
+census2000_SoCal2<-na.omit(census2000_SoCal2)
+```
+
+```{r tracts_in_all_census}
+#find tracts in all three census datasets
+include<-Reduce(intersect,list(acs0509_SoCal2$GEOID,acs1014_SoCal2$GEOID,census2000_SoCal2$GEOID))
+acs0509_SoCal2<-acs0509_SoCal2%>%filter(GEOID %in% include)
+acs1014_SoCal2<-acs1014_SoCal2%>%filter(GEOID %in% include)
+census2000_SoCal2<-census2000_SoCal2%>%filter(GEOID %in% include)
+```
+
+```{r scale}
+#standardize raw indicators
+acs0509_SoCal2[3:9]<-scale(acs0509_SoCal2[3:9])
+acs1014_SoCal2[3:9]<-scale(acs1014_SoCal2[3:9])
+census2000_SoCal2[3:9]<-scale(census2000_SoCal2[3:9])
+
+acs0509_SoCal3<-acs0509_SoCal2%>%select(pov,unem,fh,ass,hsl,bach,prof)
+acs1014_SoCal3<-acs1014_SoCal2%>%select(pov,unem,fh,ass,hsl,bach,prof)
+census2000_SoCal3<-census2000_SoCal2%>%select(pov,unem,fh,ass,hsl,bach,prof)
+```
+
+
+
+```{r merge}
+# merge three datasets to one dataframe
+all_SoCal<-NA
+all_SoCal<-merge(census2000_SoCal2,acs0509_SoCal2,by='GEOID')
+all_SoCal<-merge(all_SoCal,acs1014_SoCal2,by='GEOID')
+```
+
+# FA latent variable*1
+
+```{r weak_invariant_constraint}
+weak <- '
+# Define the latent factors.
+#2000
+de1 =~ NA*pov.x+lambda0*pov.x + lambda1*unem.x + lambda2*fh.x + lambda3*ass.x + lambda4*hsl.x+lambda5*bach.x+lambda6*prof.x 
+#05-09
+de2 =~ NA*pov.y+lambda0*pov.y + lambda1*unem.y + lambda2*fh.y + lambda3*ass.y + lambda4*hsl.y+lambda5*bach.y+lambda6*prof.y 
+#10-14
+de3 =~ NA*pov+lambda0*pov+ lambda1*unem+ lambda2*fh+ lambda3*ass+ lambda4*hsl+lambda5*bach+lambda6*prof
+
+# Intercepts
+pov.x ~ 0
+unem.x ~ 0
+fh.x ~ 0
+ass.x ~ 0
+hsl.x ~ 0
+bach.x ~ 0
+prof.x ~ 0
+
+pov.y ~ 0
+unem.y ~ 0
+fh.y ~ 0
+ass.y ~ 0
+hsl.y ~ 0
+bach.y ~ 0
+prof.y ~ 0
+
+pov ~ 0
+unem ~ 0
+fh ~ 0
+ass ~ 0
+hsl ~ 0
+bach ~ 0
+prof ~ 0
+
+# Unique Variances
+pov.x ~~ pov.x
+unem.x ~~ unem.x
+fh.x ~~ fh.x
+ass.x ~~ ass.x
+hsl.x ~~ hsl.x
+bach.x ~~ bach.x
+prof.x ~~ prof.x
+
+pov.y ~~ pov.y
+unem.y ~~ unem.y
+fh.y ~~ fh.y
+ass.y ~~ ass.y
+hsl.y ~~ hsl.y
+bach.y ~~ bach.y
+prof.y ~~ prof.y
+
+pov ~~ pov
+unem ~~ unem
+fh ~~ fh
+ass ~~ ass
+hsl ~~ hsl
+bach ~~ bach
+prof ~~ prof
+
+# Latent Variable Means
+de1 ~ 0
+de2 ~ 0
+de3 ~ 0
+
+# Latent Variable Variances and Covariance
+de1 ~~ 1*de1
+de2 ~~ 1*de2
+de3 ~~ 1*de3
+de1 ~~ 0*de2
+de1 ~~ 0*de3
+de2 ~~ 0*de3
+'
+```
+
+```{r weak_invariant_constraint_fit}
+fit_weak<- cfa(weak, data = all_SoCal, mimic = "mplus",estimator="ULS")
+summary(fit_weak, fit.measures = TRUE,standardized=T,rsquare=T)
+```
+
+
+```{r weak_invariant_constraint_plot}
+semPaths(fit_weak, what="est", sizeMan=5, edge.label.cex = 0.75,nCharNodes=6,intercepts = F,optimizeLatRes=T)
+```
+
+```{r weak_invariant_constraint_factor_scores}
+fa_scores<-predict(fit_weak)
+head(fa_scores)
+```
+
+# PCA based on pooled three datasets
+```{r pool_3_datasets}
+all_SoCal2<-rbind(census2000_SoCal2,acs0509_SoCal2)
+all_SoCal2<-rbind(all_SoCal2,acs1014_SoCal2)
+```
+
+```{r PCA}
+fit <- princomp(~pov+unem+fh+ass+hsl+bach+prof, cor=T,data=all_SoCal2,na.action = na.exclude)
+PCA_summary_all_SoCal<-summary(fit)
+PCA_summary_all_SoCal_df<-pca_importance(PCA_summary_all_SoCal)
+print(PCA_summary_all_SoCal_df)
+
+PCA_loadings_all_SoCal<-as.data.frame.matrix(PCA_summary_all_SoCal$loadings)
+print(PCA_loadings_all_SoCal)
+```
+
+```{r PCA_summary}
+PCA_summary_all_SoCal$sdev
+sd(PCA_summary_all_SoCal$scores[,1])
+sd(PCA_summary_all_SoCal$scores[,2])
+```
+
+
+```{r keep_3_PCA}
+# keep the first 3 PCAs and attached dataset (year_periods) indicators
+all_SoCal_PCA<-NA
+all_SoCal_PCA<-cbind(fit$scores[1:4214,c(1,2,3)],fit$scores[4215:8428,c(1,2,3)])
+all_SoCal_PCA<-cbind(all_SoCal_PCA,fit$scores[8429:12642,c(1,2,3)])
+all_SoCal_PCA<-data.frame(all_SoCal_PCA)
+colnames(all_SoCal_PCA)<-c("census2000_PCA1","census2000_PCA2","census2000_PCA3","acs0509_PCA1","acs0509_PCA2","acs0509_PCA3","acs1014_PCA1","acs1014_PCA2","acs1014_PCA3")
+```
+
+# FA latent variables*2
+## EFA
+
+```{r step1_EFA_census2000}
+EFA_fit1 <- fa(na.exclude(census2000_SoCal3),2,scores = "regression",rotate="Promax",oblique.scores=T,fm="minres")
+print(EFA_fit1, digits=3)
+```
+
+
+```{r step1_EFA_acs05-09}
+EFA_fit2 <- fa(na.exclude(acs0509_SoCal3), 2,scores = "regression",rotate="Promax",oblique.scores=T,fm="minres")
+print(EFA_fit2, digits=3)
+```
+
+
+
+```{r step1_EFA_acs10-14}
+EFA_fit3 <- fa(na.exclude(acs1014_SoCal3), 2,scores = "regression",rotate="Promax",oblique.scores=T,,fm="minres")
+print(EFA_fit3, digits=3)
+```
+
+##LV1:pov, unem,fh,ass,hsl
+##LV2: hsl, bach, prof
+
+```{r two_LV_weak_constraints}
+weak3 <- '
+# Define the latent factors.
+
+#2000
+de11 =~ NA*pov.x+lambda0*pov.x + lambda1*unem.x + lambda2*fh.x + lambda3*ass.x 
+de12 =~ NA*bach.x+lambda5*bach.x+lambda6*prof.x+lambda7*hsl.x
+#05-09
+de21 =~ NA*pov.y+lambda0*pov.y + lambda1*unem.y + lambda2*fh.y + lambda3*ass.y 
+de22 =~ NA*bach.y+lambda5*bach.y+lambda6*prof.y+lambda7*hsl.y
+#10-14
+de31 =~ NA*pov+lambda0*pov + lambda1*unem + lambda2*fh + lambda3*ass 
+de32 =~ NA*bach+lambda5*bach+lambda6*prof+lambda7*hsl
+
+
+# Intercepts
+pov.x ~ 0
+unem.x ~ 0
+fh.x ~ 0
+ass.x ~ 0
+hsl.x ~ 0
+bach.x ~ 0
+prof.x ~ 0
+
+pov.y ~ 0
+unem.y ~ 0
+fh.y ~ 0
+ass.y ~ 0
+hsl.y ~ 0
+bach.y ~ 0
+prof.y ~ 0
+
+pov ~ 0
+unem ~ 0
+fh ~ 0
+ass ~ 0
+hsl ~ 0
+bach ~ 0
+prof ~ 0
+
+# Unique Variances
+pov.x ~~ pov.x
+unem.x ~~ unem.x
+fh.x ~~ fh.x
+ass.x ~~ ass.x
+hsl.x ~~ hsl.x
+bach.x ~~ bach.x
+prof.x ~~ prof.x
+
+pov.y ~~ pov.y
+unem.y ~~ unem.y
+fh.y ~~ fh.y
+ass.y ~~ ass.y
+hsl.y ~~ hsl.y
+bach.y ~~ bach.y
+prof.y ~~ prof.y
+
+pov ~~ pov
+unem ~~ unem
+fh ~~ fh
+ass ~~ ass
+hsl ~~ hsl
+bach ~~ bach
+prof ~~ prof
+
+# Latent Variable Means
+de11 ~ 0
+de21 ~ 0
+de31 ~ 0
+de12 ~ 0
+de22 ~ 0
+de32 ~ 0
+
+# Latent Variable Variances and Covariance
+de11 ~~ 1*de11
+de21 ~~ 1*de21
+de31 ~~ 1*de31
+de11 ~~ 0*de21
+de11 ~~ 0*de31
+de21 ~~ 0*de31
+de11 ~~ 0*de22
+de11 ~~ 0*de32
+de21 ~~ 0*de32
+
+de12 ~~ 1*de12
+de22 ~~ 1*de22
+de32 ~~ 1*de32
+de12 ~~ 0*de22
+de12 ~~ 0*de32
+de22 ~~ 0*de32
+de12 ~~ 0*de21
+de12 ~~ 0*de31
+de22 ~~ 0*de31
+
+de11 ~~ de12
+de21 ~~ de22
+de31 ~~ de32
+'
+
+```
+
+```{r two_LV_weak_constraints_fit}
+fit_weak3<- cfa(weak3, data = all_SoCal, mimic = "mplus",estimator="ULS")
+summary(fit_weak3, fit.measures = TRUE,standardized=T,rsquare=T)
+```
+
+```{r two_LV_weak_constraints_plot}
+semPaths(fit_weak3, what="est", sizeMan=5, edge.label.cex = 1.5,nCharNodes=10,intercepts = F,optimizeLatRes=T)
+```
+
+```{r two_LV_scores}
+fa_scores3<-predict(fit_weak3)
+#pairwise correlation
+cor(fa_scores3)
+```
+
+```{r combind_indices}
+all_SoCal_res<-cbind(all_SoCal,all_SoCal_PCA)
+all_SoCal_res<-cbind(all_SoCal_res,fa_scores)
+all_SoCal_res<-cbind(all_SoCal_res,EFA_fit1$scores)
+all_SoCal_res<-cbind(all_SoCal_res,EFA_fit2$scores)
+all_SoCal_res<-cbind(all_SoCal_res,EFA_fit3$scores)
+all_SoCal_res<-cbind(all_SoCal_res,fa_scores3)
+```
+
+```{r colnames}
+colnames(all_SoCal_res)<-c("GEOID","pop1","pov1","unem1","fh1","ass1","hsl1","bach1","prof1","pop2","pov2","unem2","fh2","ass2","hsl2","bach2","prof2","pop3","pov3","unem3","fh3","ass3","hsl3","bach3","prof3","PCA11","PCA12","PCA13","PCA21","PCA22","PCA23","PCA31","PCA32","PCA33","dep1","dep2","dep3","efa11","efa12","efa22","efa21","efa32","efa31","dep11","aff12","dep21","aff22","dep31","aff32")
+all_SoCal_res$GEOID<-paste("0",all_SoCal_res$GEOID,sep="")
+```
+
+```{r percentile}
+# percentile rank1-100
+all_SoCal_res$PCA11p<-quantcut(all_SoCal_res$PCA11,q=100,labels=F)
+all_SoCal_res$PCA12p<-quantcut(all_SoCal_res$PCA12,q=100,labels=F)
+all_SoCal_res$PCA13p<-quantcut(all_SoCal_res$PCA13,q=100,labels=F)
+all_SoCal_res$PCA21p<-quantcut(all_SoCal_res$PCA21,q=100,labels=F)
+all_SoCal_res$PCA22p<-quantcut(all_SoCal_res$PCA22,q=100,labels=F)
+all_SoCal_res$PCA23p<-quantcut(all_SoCal_res$PCA23,q=100,labels=F)
+all_SoCal_res$PCA31p<-quantcut(all_SoCal_res$PCA31,q=100,labels=F)
+all_SoCal_res$PCA32p<-quantcut(all_SoCal_res$PCA32,q=100,labels=F)
+all_SoCal_res$PCA33p<-quantcut(all_SoCal_res$PCA33,q=100,labels=F)
+
+all_SoCal_res$dep1p<-quantcut(all_SoCal_res$dep1,q=100,labels=F)
+all_SoCal_res$dep2p<-quantcut(all_SoCal_res$dep2,q=100,labels=F)
+all_SoCal_res$dep3p<-quantcut(all_SoCal_res$dep3,q=100,labels=F)
+
+all_SoCal_res$dep11p<-quantcut(all_SoCal_res$dep11,q=100,labels=F)
+all_SoCal_res$aff12p<-quantcut(all_SoCal_res$aff12,q=100,labels=F)
+all_SoCal_res$dep21p<-quantcut(all_SoCal_res$dep21,q=100,labels=F)
+all_SoCal_res$aff22p<-quantcut(all_SoCal_res$aff22,q=100,labels=F)
+all_SoCal_res$dep31p<-quantcut(all_SoCal_res$dep31,q=100,labels=F)
+all_SoCal_res$aff32p<-quantcut(all_SoCal_res$aff32,q=100,labels=F)
+```
+
+```{r quintile}
+# quintile rank1-5
+all_SoCal_res$PCA11q<-quantcut(all_SoCal_res$PCA11,q=5,labels=F)
+all_SoCal_res$PCA12q<-quantcut(all_SoCal_res$PCA12,q=5,labels=F)
+all_SoCal_res$PCA13q<-quantcut(all_SoCal_res$PCA13,q=5,labels=F)
+all_SoCal_res$PCA21q<-quantcut(all_SoCal_res$PCA21,q=5,labels=F)
+all_SoCal_res$PCA22q<-quantcut(all_SoCal_res$PCA22,q=5,labels=F)
+all_SoCal_res$PCA23q<-quantcut(all_SoCal_res$PCA23,q=5,labels=F)
+all_SoCal_res$PCA31q<-quantcut(all_SoCal_res$PCA31,q=5,labels=F)
+all_SoCal_res$PCA32q<-quantcut(all_SoCal_res$PCA32,q=5,labels=F)
+all_SoCal_res$PCA33q<-quantcut(all_SoCal_res$PCA33,q=5,labels=F)
+
+all_SoCal_res$dep1q<-quantcut(all_SoCal_res$dep1,q=5,labels=F)
+all_SoCal_res$dep2q<-quantcut(all_SoCal_res$dep2,q=5,labels=F)
+all_SoCal_res$dep3q<-quantcut(all_SoCal_res$dep3,q=5,labels=F)
+
+all_SoCal_res$dep11q<-quantcut(all_SoCal_res$dep11,q=5,labels=F)
+all_SoCal_res$aff12q<-quantcut(all_SoCal_res$aff12,q=5,labels=F)
+all_SoCal_res$dep21q<-quantcut(all_SoCal_res$dep21,q=5,labels=F)
+all_SoCal_res$aff22q<-quantcut(all_SoCal_res$aff22,q=5,labels=F)
+all_SoCal_res$dep31q<-quantcut(all_SoCal_res$dep31,q=5,labels=F)
+all_SoCal_res$aff32q<-quantcut(all_SoCal_res$aff32,q=5,labels=F)
+```
+
+```{r tertile}
+# tertile rank1-5
+all_SoCal_res$PCA11t<-quantcut(all_SoCal_res$PCA11,q=3,labels=F)
+all_SoCal_res$PCA12t<-quantcut(all_SoCal_res$PCA12,q=3,labels=F)
+all_SoCal_res$PCA13t<-quantcut(all_SoCal_res$PCA13,q=3,labels=F)
+all_SoCal_res$PCA21t<-quantcut(all_SoCal_res$PCA21,q=3,labels=F)
+all_SoCal_res$PCA22t<-quantcut(all_SoCal_res$PCA22,q=3,labels=F)
+all_SoCal_res$PCA23t<-quantcut(all_SoCal_res$PCA23,q=3,labels=F)
+all_SoCal_res$PCA31t<-quantcut(all_SoCal_res$PCA31,q=3,labels=F)
+all_SoCal_res$PCA32t<-quantcut(all_SoCal_res$PCA32,q=3,labels=F)
+all_SoCal_res$PCA33t<-quantcut(all_SoCal_res$PCA33,q=3,labels=F)
+
+all_SoCal_res$dep1t<-quantcut(all_SoCal_res$dep1,q=3,labels=F)
+all_SoCal_res$dep2t<-quantcut(all_SoCal_res$dep2,q=3,labels=F)
+all_SoCal_res$dep3t<-quantcut(all_SoCal_res$dep3,q=3,labels=F)
+
+all_SoCal_res$dep11t<-quantcut(all_SoCal_res$dep11,q=3,labels=F)
+all_SoCal_res$aff12t<-quantcut(all_SoCal_res$aff12,q=3,labels=F)
+all_SoCal_res$dep21t<-quantcut(all_SoCal_res$dep21,q=3,labels=F)
+all_SoCal_res$aff22t<-quantcut(all_SoCal_res$aff22,q=3,labels=F)
+all_SoCal_res$dep31t<-quantcut(all_SoCal_res$dep31,q=3,labels=F)
+all_SoCal_res$aff32t<-quantcut(all_SoCal_res$aff32,q=3,labels=F)
+```
+
+```{r write.csv}
+write.csv(all_SoCal_res,"/Users/xinyu/Rob\ lab/neighborhood/census_data/data/all_SoCal_res.csv",row.names = F)
+```
+
+```{r other_info}
+# all_SoCal_res0<-read.csv("/Users/xinyu/Rob\ lab/neighborhood/census_data/data/all_SoCal_res1.csv")
+# all_SoCal_res0$GEOID<-paste("0",all_SoCal_res0$GEOID,sep="")
+```
+
+
+```{r get_tracts_geom}
+census_api_key("47ba78f3e9d1f255fc8b04c854f382a95bf0a851")
+geo<-get_acs(state = "CA", geography = "tract",variables = "DP05_0001",survey="acs5",year=2009, geometry = T)
+```
+
+```{r merge_geom}
+res.geo<-merge(geo,all_SoCal_res,all.y=T,by='GEOID')
+```
+
+```{r write_shapefile}
+st_write(res.geo, dsn = "/Users/xinyu/Rob\ lab/neighborhood/census_data/data/geo/SES_SoCal_2000_tract.shp", layer = "SES", driver = "ESRI Shapefile")
+```
+
+
